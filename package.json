@@ -1,5 +1,5 @@
 {
-	"name": "WordFinder",
+	"name": "wordfinder",
 	"version": "1.0.0",
 	"description": "A simple tool to help find words for the Wordle puzzle.\"",
 	"main": "index.html",
@@ -8,18 +8,40 @@
 	"license": "MIT",
 	"private": false,
 	"scripts": {
+		"build": "node ./bin/build.js",
 		"deploy": "gh-pages -d dist",
-		"sass-watch": "sass --watch dev/assets/scss:dist/assets/css"
+		"sass-watch": "sass --watch dev/assets/scss:dist/assets/css",
+		"watch": "node ./bin/node-watch.js"
 	},
 	"devDependencies": {
+		"autoprefixer": "^10.4.2",
+		"body-parser": "^1.19.1",
+		"browserslist": "^4.19.1",
+		"chokidar": "^3.5.3",
+		"colors": "^1.4.0",
+		"dateformat": "4.5.1",
 		"eslint": "^8.7.0",
 		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-import": "^2.25.4",
-		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^4.0.0",
+		"fs-extra": "^10.0.0",
+		"ftp": "^0.3.10",
 		"gh-pages": "^3.2.3",
+		"globby": "^12.2.0",
+		"html-minifier": "^4.0.0",
+		"imagemin": "7.0.1",
+		"imagemin-gifsicle": "^7.0.0",
+		"imagemin-jpegtran": "^7.0.0",
+		"imagemin-pngquant": "^9.0.2",
+		"imagemin-svgo": "8.0.0",
+		"js-beautify": "^1.14.0",
+		"jshint": "^2.13.3",
+		"morgan": "^1.10.0",
+		"postcss": "^8.4.5",
+		"postcss-cli": "^9.1.0",
 		"prettier": "^2.5.1",
-		"sass": "^1.49.0"
+		"sass": "^1.49.0",
+		"uglify-js": "^3.14.5",
+		"watchree": "^0.1.4"
 	},
 	"browserslist": [
 		"last 2 version"
