@@ -1,0 +1,13 @@
+{
+    "rules": {
+        "indentation": "tab",
+        "comment-empty-line-before": [ "always", {
+            ignore: [
+                "stylelint-commands"
+            ]
+        }],
+        "max-empty-lines": 2,
+        "declaration-colon-space-after": "always",
+        "block-no-empty": null
+    }
+}
