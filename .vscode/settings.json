@@ -8,7 +8,6 @@
 		]
 	},
 	"eslint.alwaysShowStatus": true,
-	"eslint.autoFixOnSave": true,
 	"eslint.lintTask.enable": true,
 	"eslint.packageManager": "yarn",
 	"eslint.run": "onSave",
@@ -27,20 +26,5 @@
 	"eslint.format.enable": true,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true
-	},
-	"liveSassCompile.settings.excludeList": [
-		"**/node_modules/**",
-		".vscode/**",
-		"resources/**",
-		"dist/**",
-		"dev/assets/css/**"
-	],
-	"liveSassCompile.settings.formats": [
-		{
-			"format": "expanded",
-			"extensionName": ".css",
-			"savePath": "/dev/assets/css/"
-		}
-	],
-	"liveSassCompile.settings.generateMap": true
+	}
 }
