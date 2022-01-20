@@ -7,37 +7,135 @@ function clearFoundWords () {
 	foundBlock.innerHTML = '';
 }
 
+function handleChars ( e ) {
+
+	var inp = e.currentTarget;
+
+	// make sure value is uppercase
+	inp.value = inp.value.toUpperCase();
+
+	// if we don't have data-val storage, add it
+	if ( inp.getAttribute( 'data-val' ) === null ) {
+		inp.setAttribute( 'data-val', '' );
+	}
+
+	// deactivate any old keys
+	var key = document.getElementById( 'btn-check-' + inp.getAttribute( 'data-val' ) );
+	if ( key ) {
+		key.disabled = false;
+	}
+
+	// we need to make sure this value is not locked on the keyboard
+	key = document.getElementById( 'btn-check-' + inp.value );
+	if( key ) {
+		key.checked = false;
+		key.disabled = true;
+	} else if( key ){
+		key.disabled = false;
+	}
+
+	var check = inp.parentNode.querySelector( '.form-check' );
+	if ( check && inp.value.length ) {
+		check.style.display = 'block';
+	} else if( check ) {
+		check.style.display = 'none';
+	}
+
+	// set our new data-val attribute
+	inp.setAttribute( 'data-val', inp.value );
+
+}
+
+function handleToggles ( e ) {
+
+	var inp = e.currentTarget,
+		parent = inp ? inp.parentNode.parentNode : null,
+		chars = parent ? parent.querySelector( '.chars' ) : null;
+
+	// add the locked class to the character
+	if ( inp && chars && inp.checked ) {
+		chars.classList.add( 'locked' );
+	} else if ( inp && chars ) {
+		chars.classList.remove( 'locked' );
+	}
+}
+
 function buildRegEx () {
+
 	var str = '',
+		incStr = '',
+		includeChars = document.querySelectorAll( '.chars:not(.locked)' ),
 		exStr = '',
 		excludeChars = document.querySelectorAll( '.btn-check:checked' ),
 		i;
-	// finmd list of characters not used
-	for ( i = 0; i < excludeChars.length; i++ ) {
-		exStr += excludeChars[i].value;
+
+	// find list of characters to include
+	if( includeChars && includeChars.length ) {
+		for ( i = 0; i < includeChars.length; i++ ) {
+			if( includeChars[i].value.length ) {
+				incStr += '(?=.*' + includeChars[i].value + ')';
+			}
+		}
 	}
-	// fill in known characters
+
+	// find list of characters not used
+	if( excludeChars && excludeChars.length ) {
+		for ( i = 0; i < excludeChars.length; i++ ) {
+			exStr += excludeChars[i].value;
+		}
+	}
+
+	// fill in known characters and or exluded characters
 	for ( i = 1; i < 6; i++ ) {
-		var v = document.querySelector( 'input[name="char' + i + '"]' ).value;
+		var inp = document.querySelector( 'input[name="char' + i + '"]' );
+		var v = inp.classList.contains( 'locked' ) ? inp.value : ''; // we only need the value for "locked" characters
 		str += v.length ? v : exStr.length ? '[^' + exStr + ']' : '.';
 	}
+
+	// add the "include characters" string.
+	if ( incStr.length ) {
+		str = '^' + incStr + str;
+
+	}
+
 	return str;
 }
 
-var inputs = document.querySelectorAll( 'input' );
-if ( inputs && inputs.length ) {
-	for ( var i = 0; i < inputs.length; i++ ) {
-		inputs[i].addEventListener( 'change', clearFoundWords );
+// handle the character inputs
+var inpChars = document.querySelectorAll( '.chars' );
+if ( inpChars && inpChars.length ) {
+
+	for ( var i = 0; i < inpChars.length; i++ ) {
+
+		inpChars[i].addEventListener( 'change', handleChars );
+
 	}
 }
 
+// handle toggles
+var inpLocks = document.querySelectorAll( '.form-check-input' );
+if ( inpLocks && inpLocks.length ) {
+
+	for ( var i = 0; i < inpLocks.length; i++ ) {
+
+		inpLocks[i].addEventListener( 'change', handleToggles );
+
+	}
+}
+
+// handle the btn (future, can't we just automate this?)
 var btnFind = document.querySelector( '.btn-find' );
 if ( btnFind ) {
+
 	btnFind.addEventListener( 'click', function () {
+
 		var re = new RegExp( buildRegEx(), 'gi' );
+
 		var matches = dictionary.filter( function ( word ) {
 			return word.match( re );
 		} );
+
 		foundBlock.innerHTML = matches.toString().replace( /,/g, ', ' );
+
 	} );
 }
