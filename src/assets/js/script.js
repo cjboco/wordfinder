@@ -35,7 +35,6 @@ function handleChars ( e ) {
 	}
 
 	var check = inp.parentNode.querySelector( '.form-check' );
-	console.log( check );
 	if ( check && inp.value.length ) {
 		check.style.display = 'block';
 	} else if ( check ) {
@@ -205,7 +204,6 @@ if ( btnFind ) {
 		} );
 
 		matches = matches.toString().replace( /,/g, ' ' );
-		console.log( matches );
 		foundBlock.innerHTML = matches.replace( /(\w*)/g, '<span class="badge bg-secondary">$1</span>' );
 
 	} );
