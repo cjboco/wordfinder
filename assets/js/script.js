@@ -23,15 +23,17 @@ function handleChars ( e ) {
 	var key = document.getElementById( 'btn-check-' + inp.getAttribute( 'data-val' ) );
 	if ( key ) {
 		key.disabled = false;
+		key.classList.remove( 'locked' );
 	}
 
-	// we need to make sure this value is not locked on the keyboard
+	// we need to make sure this value is not disabled on the keyboard
 	key = document.getElementById( 'btn-check-' + inp.value );
 	if( key ) {
 		key.checked = false;
 		key.disabled = true;
 	} else if( key ){
 		key.disabled = false;
+		key.classList.remove( 'locked' );
 	}
 
 	var check = inp.parentNode.querySelector( '.form-check' );
@@ -81,12 +83,16 @@ function handleToggles ( e ) {
 
 	var inp = e.currentTarget,
 		parent = inp ? inp.parentNode.parentNode : null,
-		chars = parent ? parent.querySelector( '.chars' ) : null;
+		chars = parent ? parent.querySelector( '.chars' ) : null,
+		key = document.getElementById( 'btn-check-' + chars.value );
+
 
 	if ( inp && chars && inp.checked ) {
 		chars.classList.add( 'locked' );
+		key.classList.add( 'locked' );
 	} else if ( inp && chars ) {
 		chars.classList.remove( 'locked' );
+		key.classList.remove( 'locked' );
 	}
 }
 
