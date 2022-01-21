@@ -37,8 +37,10 @@ function handleChars ( e ) {
 	var check = inp.parentNode.querySelector( '.form-check' );
 	if ( check && inp.value.length ) {
 		check.style.display = 'block';
-	} else if( check ) {
+	} else if ( check ) {
+		check.querySelector( '.form-check-input' ).checked = false;br;
 		check.style.display = 'none';
+		inp.classList.remove( 'locked' );
 	}
 
 	// set our new data-val attribute
@@ -46,13 +48,41 @@ function handleChars ( e ) {
 
 }
 
+// we just want to use A-Z, TAB, SHIFT
+function handleKeyDown ( e ) {
+
+	var key = e.keyCode;
+
+	if ( ( key > 64 && key < 91 )|| key === 16 || key === 9 || key === 8 || key === 46 ) {
+		return true;
+	}
+
+	e.preventDefault();
+}
+
+// tab to next char if value is not blank
+function handleTabs ( e ) {
+
+	var inp = e.currentTarget,
+		key = e.keyCode,
+		tabidx = parseFloat( inp.getAttribute( 'tabindex' ) );
+
+	if( tabidx && key > 64 && key < 91 ) {
+		var nextInp = document.querySelector( '.chars[tabindex="' + ( tabidx < 5 ? tabidx + 1 : 1 ) + '"]' );
+		if ( nextInp ) {
+			nextInp.focus();
+		}
+	}
+
+}
+
+// add the locked class to the character
 function handleToggles ( e ) {
 
 	var inp = e.currentTarget,
 		parent = inp ? inp.parentNode.parentNode : null,
 		chars = parent ? parent.querySelector( '.chars' ) : null;
 
-	// add the locked class to the character
 	if ( inp && chars && inp.checked ) {
 		chars.classList.add( 'locked' );
 	} else if ( inp && chars ) {
@@ -60,42 +90,78 @@ function handleToggles ( e ) {
 	}
 }
 
-function buildRegEx () {
+// find list of characters to include
+// returns a regex str
+function getIncludedChars () {
 
-	var str = '',
-		incStr = '',
-		includeChars = document.querySelectorAll( '.chars:not(.locked)' ),
-		exStr = '',
-		excludeChars = document.querySelectorAll( '.btn-check:checked' ),
-		i;
+	var chars = document.querySelectorAll( '.chars:not(.locked)' ),
+		str = '';
 
-	// find list of characters to include
-	if( includeChars && includeChars.length ) {
-		for ( i = 0; i < includeChars.length; i++ ) {
-			if( includeChars[i].value.length ) {
-				incStr += '(?=.*' + includeChars[i].value + ')';
+	if( chars && chars.length ) {
+		for ( i = 0; i < chars.length; i++ ) {
+			if( chars[i].value.length ) {
+				str += '(?=.*' + chars[i].value + ')';
 			}
 		}
 	}
 
-	// find list of characters not used
-	if( excludeChars && excludeChars.length ) {
-		for ( i = 0; i < excludeChars.length; i++ ) {
-			exStr += excludeChars[i].value;
+	return str;
+}
+
+// find list of characters not used
+function getExcludedChars () {
+
+	var chars = document.querySelectorAll( '.btn-check:checked' ),
+		str = '';
+
+	if( chars && chars.length ) {
+		for ( i = 0; i < chars.length; i++ ) {
+			str += chars[i].value;
 		}
 	}
 
+	return str;
+}
+
+function buildRegEx () {
+
+	var str = '',
+		incStr = getIncludedChars(),
+		exStr = getExcludedChars(),
+		i;
+
 	// fill in known characters and or exluded characters
 	for ( i = 1; i < 6; i++ ) {
-		var inp = document.querySelector( 'input[name="char' + i + '"]' );
-		var v = inp.classList.contains( 'locked' ) ? inp.value : ''; // we only need the value for "locked" characters
-		str += v.length ? v : exStr.length ? '[^' + exStr + ']' : '.';
+		var inp = document.querySelector( 'input[name="char' + i + '"]' ),
+			inpLocked = inp.classList.contains( 'locked' ),
+			v = inpLocked ? inp.value : ''; // we only need the value for "locked" characters
+
+		if ( inpLocked && v.length ) {
+
+			// use the locked character
+			str += v;
+
+		} else if ( exStr.length ) {
+
+			// if we have excluded characters use them and add any non locked characters
+			str += '[^' + exStr + ( !inpLocked && inp.value ? inp.value : '' ) + ']';
+
+		} else if ( !inpLocked && inp.value.length ) {
+
+			// if it's not locked, then we can exclude it from it's position
+			str += '[^' + inp.value + ']';
+
+		} else {
+
+			// any character goes!
+			str += '.';
+
+		}
 	}
 
 	// add the "include characters" string.
 	if ( incStr.length ) {
 		str = '^' + incStr + str;
-
 	}
 
 	return str;
@@ -108,6 +174,8 @@ if ( inpChars && inpChars.length ) {
 	for ( var i = 0; i < inpChars.length; i++ ) {
 
 		inpChars[i].addEventListener( 'change', handleChars );
+		inpChars[i].addEventListener( 'keydown', handleKeyDown );
+		inpChars[i].addEventListener( 'keyup', handleTabs );
 
 	}
 }
