@@ -35,10 +35,11 @@ function handleChars ( e ) {
 	}
 
 	var check = inp.parentNode.querySelector( '.form-check' );
+	console.log( check );
 	if ( check && inp.value.length ) {
 		check.style.display = 'block';
 	} else if ( check ) {
-		check.querySelector( '.form-check-input' ).checked = false;br;
+		check.querySelector( '.form-check-input' ).checked = false;
 		check.style.display = 'none';
 		inp.classList.remove( 'locked' );
 	}
