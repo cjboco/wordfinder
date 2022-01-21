@@ -2,7 +2,7 @@
 
 # WordFinder
 
-A simple tool to help you find five letter words based on known and used characters. You can view the tool at [https://cjboco.github.io/wordfinder/
+A Wordle word finder and helper. It's a simple tool to help you find five letter words based on known and used characters. You can view the tool at [https://cjboco.github.io/wordfinder/
 ](https://cjboco.github.io/wordfinder/)
 
 ### How to use it
