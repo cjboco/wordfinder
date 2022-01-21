@@ -25,6 +25,15 @@ input[type="text"] {
 	min-height: 80px;
 }
 
+.form-check-input {
+	background-color: $yellow;
+	border-color: $yellow;
+	&:checked {
+		background-color: $green;
+		border-color: $green;
+	}
+}
+
 .chars {
 	width: 44px;
 	text-align: center;
