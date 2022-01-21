@@ -28,6 +28,7 @@ input[type="text"] {
 .form-check-input {
 	background-color: $yellow;
 	border-color: $yellow;
+
 	&:checked {
 		background-color: $green;
 		border-color: $green;
@@ -78,9 +79,16 @@ input[type="text"] {
 	border-color: #373b43;
 }
 
-.btn-check:disabled + .btn-secondary {
-	background-color: $yellow !important;
-	border-color: $yellow !important;
+.btn-check {
+	&:disabled + .btn-secondary {
+		background-color: $yellow !important;
+		border-color: $yellow !important;
+	}
+
+	&.locked:disabled + .btn-secondary {
+		background-color: $green !important;
+		border-color: $green !important;
+	}
 }
 
 .foundwords {
