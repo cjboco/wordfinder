@@ -203,7 +203,9 @@ if ( btnFind ) {
 			return word.match( re );
 		} );
 
-		foundBlock.innerHTML = matches.toString().replace( /,/g, ', ' );
+		matches = matches.toString().replace( /,/g, ' ' );
+		console.log( matches );
+		foundBlock.innerHTML = matches.replace( /(\w*)/g, '<span class="badge bg-secondary">$1</span>' );
 
 	} );
 }
